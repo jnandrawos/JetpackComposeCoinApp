@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.example.coinapp.base.extensions.encodeUrl
+import com.example.coinapp.base.models.CoinData
 import com.example.coinapp.presentation.components.CustomCoinTile
 import com.example.coinapp.presentation.navigation.BottomBarScreen
 import com.example.coinapp.presentation.viewmodels.CoinsViewModel
@@ -45,48 +46,40 @@ fun CoinsScreen(
     SwipeRefresh(
         state = swipeRefreshState,
         onRefresh = { coinsViewModel.getCoins() },
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.fillMaxSize()
     ) {
         Column(
             modifier = modifier
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            Text(
-                text = "BlockChain",
+            CoinsSelector(state.isLoading, state.coinsList, navController)
+        }
+    }
+}
+
+@Composable
+fun CoinsSelector(isLoading: Boolean, data: List<CoinData>, navController: NavHostController) {
+    if (isLoading) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            CircularProgressIndicator(
                 color = Color.White,
-                fontSize = 24.sp,
-                textAlign = TextAlign.Center
             )
-            Spacer(modifier = Modifier.height(20.dp))
-            if (state.isLoading) {
-                Column(
-                    modifier = modifier
-                        .fillMaxSize(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    CircularProgressIndicator(
-                        color = Color.White,
-                    )
-                }
-            } else
-                LazyColumn(
-                    Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(bottom = 16.dp)
-                ) {
-                    itemsIndexed(state.coinsList) { index, item ->
-                        CustomCoinTile(
-                            title = item.name.toString(),
-                            subtitle = item.symbol,
-                            imageUrl = item.icon.orEmpty()
-                        ) { image, name, symbol ->
-                            navController.navigate("${BottomBarScreen.Details.route}/${image?.encodeUrl()}/$name/$symbol")
-                        }
-                        if (index < state.coinsList.size) Spacer(modifier = Modifier.height(20.dp))
-                    }
-                }
+        }
+    } else LazyColumn(
+        Modifier.fillMaxSize(), contentPadding = PaddingValues(bottom = 16.dp)
+    ) {
+        itemsIndexed(data) { index, item ->
+            CustomCoinTile(
+                title = item.name.toString(), subtitle = item.symbol, imageUrl = item.icon.orEmpty()
+            ) { image, name, symbol ->
+                navController.navigate("${BottomBarScreen.Details.route}/${image?.encodeUrl()}/$name/$symbol")
+            }
+            if (index < data.size) Spacer(modifier = Modifier.height(20.dp))
         }
     }
 }

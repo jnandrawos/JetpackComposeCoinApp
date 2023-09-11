@@ -20,15 +20,12 @@ class CoinsViewModel @Inject constructor(
 ) : ViewModel() {
     private val _coinsState = mutableStateOf(CoinsUiState())
     val coinsState: State<CoinsUiState> = _coinsState
-    private val _walletState = mutableStateOf(WalletUiState())
-    val walletState: State<WalletUiState> = _walletState
 
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing = _isRefreshing.asStateFlow()
 
     init {
         getCoins()
-        getWallet()
     }
 
     fun getCoins() {
@@ -52,102 +49,6 @@ class CoinsViewModel @Inject constructor(
                     Status.ERROR -> {
                         _coinsState.value = coinsState.value.copy(
                             coinsList = result.data?.data.orEmpty(),
-                            isLoading = false
-                        )
-                    }
-                }
-            }
-        }
-    }
-
-    fun getWallet() {
-        viewModelScope.launch {
-            coinsService.getWallet().collect { result ->
-                when (result.status) {
-                    Status.LOADING -> {
-                        _walletState.value = walletState.value.copy(
-                            valueBTC = result.data?.data?.valueBTC,
-                            valueUSD = result.data?.data?.valueUSD,
-                            isLoading = true
-                        )
-                    }
-
-                    Status.SUCCESS -> {
-                        _walletState.value = walletState.value.copy(
-                            valueBTC = result.data?.data?.valueBTC,
-                            valueUSD = result.data?.data?.valueUSD,
-                            isLoading = false
-                        )
-                    }
-
-                    Status.ERROR -> {
-                        _walletState.value = walletState.value.copy(
-                            valueBTC = result.data?.data?.valueBTC,
-                            valueUSD = result.data?.data?.valueUSD,
-                            isLoading = false
-                        )
-                    }
-                }
-            }
-        }
-    }
-
-    fun depositWallet() {
-        viewModelScope.launch {
-            coinsService.depositWallet().collect { result ->
-                when (result.status) {
-                    Status.LOADING -> {
-                        _walletState.value = walletState.value.copy(
-                            valueBTC = result.data?.data?.valueBTC,
-                            valueUSD = result.data?.data?.valueUSD,
-                            isLoading = true
-                        )
-                    }
-
-                    Status.SUCCESS -> {
-                        _walletState.value = walletState.value.copy(
-                            valueBTC = result.data?.data?.valueBTC,
-                            valueUSD = result.data?.data?.valueUSD,
-                            isLoading = false
-                        )
-                    }
-
-                    Status.ERROR -> {
-                        _walletState.value = walletState.value.copy(
-                            valueBTC = result.data?.data?.valueBTC,
-                            valueUSD = result.data?.data?.valueUSD,
-                            isLoading = false
-                        )
-                    }
-                }
-            }
-        }
-    }
-
-    fun withdrawWallet() {
-        viewModelScope.launch {
-            coinsService.withdrawWallet().collect { result ->
-                when (result.status) {
-                    Status.LOADING -> {
-                        _walletState.value = walletState.value.copy(
-                            valueBTC = result.data?.data?.valueBTC,
-                            valueUSD = result.data?.data?.valueUSD,
-                            isLoading = true
-                        )
-                    }
-
-                    Status.SUCCESS -> {
-                        _walletState.value = walletState.value.copy(
-                            valueBTC = result.data?.data?.valueBTC,
-                            valueUSD = result.data?.data?.valueUSD,
-                            isLoading = false
-                        )
-                    }
-
-                    Status.ERROR -> {
-                        _walletState.value = walletState.value.copy(
-                            valueBTC = result.data?.data?.valueBTC,
-                            valueUSD = result.data?.data?.valueUSD,
                             isLoading = false
                         )
                     }

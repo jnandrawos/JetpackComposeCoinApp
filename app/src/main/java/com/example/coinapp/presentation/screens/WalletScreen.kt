@@ -27,8 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.coinapp.presentation.viewmodels.CoinsViewModel
-import com.example.coinapp.presentation.viewmodels.LogsViewModel
+import com.example.coinapp.presentation.viewmodels.WalletViewModel
 import com.example.coinapp.source.local.TransactionModel
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -38,21 +37,16 @@ import java.util.Locale
 @Composable
 fun WalletScreen(
     modifier: Modifier = Modifier,
-    coinsViewModel: CoinsViewModel = hiltViewModel(),
-    logsViewModel: LogsViewModel = hiltViewModel(),
+    walletViewModel: WalletViewModel = hiltViewModel(),
 ) {
     val state by remember {
-        coinsViewModel.walletState
+        walletViewModel.walletState
     }
     Column(
         modifier = modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Text(
-            text = "BlockChain", color = Color.White, fontSize = 24.sp, textAlign = TextAlign.Center
-        )
-        Spacer(modifier = Modifier.height(20.dp))
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -121,8 +115,8 @@ fun WalletScreen(
                         .padding(vertical = 10.dp)
                         .clickable {
                             if (state.isLoading.not()) {
-                                coinsViewModel.depositWallet()
-                                logsViewModel.insertTransaction(
+                                walletViewModel.depositWallet()
+                                walletViewModel.insertTransaction(
                                     TransactionModel(
                                         transactionTime = SimpleDateFormat(
                                             "dd-MM-yyyy HH:mm", Locale.getDefault()
@@ -147,8 +141,8 @@ fun WalletScreen(
                         .padding(10.dp)
                         .clickable {
                             if (state.isLoading.not()) {
-                                coinsViewModel.withdrawWallet()
-                                logsViewModel.insertTransaction(
+                                walletViewModel.withdrawWallet()
+                                walletViewModel.insertTransaction(
                                     TransactionModel(
                                         transactionTime = SimpleDateFormat(
                                             "dd-MM-yyyy HH:mm", Locale.getDefault()

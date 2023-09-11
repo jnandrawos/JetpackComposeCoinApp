@@ -17,17 +17,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import com.example.coinapp.presentation.components.TransactionTile
-import com.example.coinapp.presentation.viewmodels.LogsViewModel
+import com.example.coinapp.presentation.viewmodels.WalletViewModel
 
 @Composable
 fun LogsScreen(
     modifier: Modifier,
-    logsViewModel: LogsViewModel = hiltViewModel()
+    walletViewModel: WalletViewModel = hiltViewModel()
 ) {
     val state by remember {
-        logsViewModel.logsState
+        walletViewModel.logsState
     }
     Column(
         modifier = modifier
@@ -35,13 +34,6 @@ fun LogsScreen(
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
-        Text(
-            text = "BlockChain",
-            color = Color.White,
-            fontSize = 24.sp,
-            textAlign = TextAlign.Center
-        )
-        Spacer(modifier = Modifier.height(20.dp))
         state.logsList.forEachIndexed { index, transaction ->
             TransactionTile(
                 date = transaction.transactionTime.toString(),

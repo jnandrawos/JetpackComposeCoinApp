@@ -12,12 +12,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.coinapp.presentation.navigation.BottomBarScreen
 
 @Composable
-fun CustomBottomAppBar(navController: NavHostController) {
-    val screens = listOf(
-        BottomBarScreen.Coins,
-        BottomBarScreen.Wallet,
-        BottomBarScreen.Logs
-    )
+fun CustomBottomAppBar(navController: NavHostController, screens: List<BottomBarScreen>) {
     val navBackStackEntry = navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry.value?.destination
     if (screens.any { it.route == currentRoute?.route })

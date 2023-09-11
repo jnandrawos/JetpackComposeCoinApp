@@ -7,6 +7,7 @@ import com.example.coinapp.base.models.ErrorDataModel
 import com.example.coinapp.source.local.TransactionDao
 import com.example.coinapp.source.local.TransactionsDatabase
 import com.example.coinapp.source.remote.api.CoinsApi
+import com.example.coinapp.source.remote.api.WalletApi
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
@@ -88,8 +89,14 @@ class ApplicationModule {
 
     @Provides
     @Singleton
-    fun provideManageRequestsApi(retrofit: Retrofit): CoinsApi {
+    fun provideCoinsApi(retrofit: Retrofit): CoinsApi {
         return retrofit.create(CoinsApi::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideWalletApi(retrofit: Retrofit): WalletApi {
+        return retrofit.create(WalletApi::class.java)
     }
 
     @Provides
