@@ -55,7 +55,8 @@ fun MainScreen() {
                         .background(Color.Black)
                 ) {
                     Text(
-                        text = "BlockChain",
+                        text = screens.firstOrNull { it.route == navController.currentBackStackEntryAsState().value?.destination?.route }?.label
+                            ?: "",
                         color = Color.White,
                         fontSize = 24.sp,
                         textAlign = TextAlign.Start,

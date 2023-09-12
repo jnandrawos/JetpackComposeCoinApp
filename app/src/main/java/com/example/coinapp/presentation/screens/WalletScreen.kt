@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -41,6 +42,9 @@ fun WalletScreen(
 ) {
     val state by remember {
         walletViewModel.walletState
+    }
+    LaunchedEffect(Unit) {
+        walletViewModel.getWallet()
     }
     Column(
         modifier = modifier

@@ -27,11 +27,6 @@ class WalletViewModel @Inject constructor(
     private val _walletState = mutableStateOf(WalletUiState())
     val walletState: State<WalletUiState> = _walletState
 
-    init {
-        getTransaction()
-        getWallet()
-    }
-
     fun insertTransaction(transactionModel: TransactionModel) {
         viewModelScope.launch(Dispatchers.IO) {
             transactionRepository.insert(transactionModel)

@@ -3,6 +3,7 @@ package com.example.coinapp.presentation.components
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
@@ -36,10 +37,22 @@ fun CustomBottomAppBar(navController: NavHostController, screens: List<BottomBar
                         Icon(
                             imageVector = item.icon,
                             contentDescription = "",
-                            tint = Color.Black
                         )
-                    }
+                    },
+                    colors = getNavigationBarItemColors()
                 )
             }
         }
 }
+
+@Composable
+fun getNavigationBarItemColors() =
+    NavigationBarItemColors(
+        selectedIconColor = Color.Blue,
+        selectedTextColor = Color.Blue,
+        selectedIndicatorColor = Color.White,
+        unselectedIconColor = Color.DarkGray,
+        unselectedTextColor = Color.DarkGray,
+        disabledIconColor = Color.Red,
+        disabledTextColor = Color.Red,
+    )
