@@ -28,6 +28,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        MyApp.instance.activity = this
         setContent {
             CoinAppTheme {
                 MainScreen()

@@ -1,6 +1,5 @@
 package com.example.coinapp.presentation.screens
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -9,20 +8,19 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.example.coinapp.MyApp
 import com.example.coinapp.base.extensions.encodeUrl
+import com.example.coinapp.base.extensions.obtainViewModel
 import com.example.coinapp.base.models.CoinData
 import com.example.coinapp.presentation.components.CustomCoinTile
+import com.example.coinapp.presentation.components.LazyLoader
 import com.example.coinapp.presentation.navigation.BottomBarScreen
 import com.example.coinapp.presentation.viewmodels.CoinsViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -32,11 +30,19 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 fun CoinsScreen(
     modifier: Modifier,
     navController: NavHostController,
-    coinsViewModel: CoinsViewModel = hiltViewModel()
 ) {
+    val coinsViewModel: CoinsViewModel by lazy {
+        obtainViewModel(
+            MyApp.instance.activity,
+            CoinsViewModel::class.java,
+            MyApp.instance.activity.defaultViewModelProviderFactory
+        )
+    }
     val state by remember {
         coinsViewModel.coinsState
     }
+
+
     val isRefreshing = coinsViewModel.isRefreshing.collectAsState().value
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = isRefreshing)
 
@@ -50,24 +56,18 @@ fun CoinsScreen(
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            CoinsSelector(state.isLoading, state.coinsList, navController)
+            LazyLoader(
+                status = state.status
+            ) {
+                CoinsSelector(state.coinsList.orEmpty(), navController)
+            }
         }
     }
 }
 
 @Composable
-fun CoinsSelector(isLoading: Boolean, data: List<CoinData>, navController: NavHostController) {
-    if (isLoading) {
-        Column(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            CircularProgressIndicator(
-                color = Color.White,
-            )
-        }
-    } else LazyColumn(
+fun CoinsSelector(data: List<CoinData>, navController: NavHostController) {
+    LazyColumn(
         Modifier.fillMaxSize(), contentPadding = PaddingValues(bottom = 16.dp)
     ) {
         itemsIndexed(data) { index, item ->

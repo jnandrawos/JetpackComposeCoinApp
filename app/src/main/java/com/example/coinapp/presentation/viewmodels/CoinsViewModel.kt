@@ -1,12 +1,11 @@
 package com.example.coinapp.presentation.viewmodels
 
-import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.coinapp.base.models.CoinsUiState
 import com.example.coinapp.base.models.Status
-import com.example.coinapp.base.models.WalletUiState
+import com.example.coinapp.presentation.components.LoaderStatus
 import com.example.coinapp.source.remote.service.CoinsService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,8 +17,7 @@ import javax.inject.Inject
 class CoinsViewModel @Inject constructor(
     private val coinsService: CoinsService
 ) : ViewModel() {
-    private val _coinsState = mutableStateOf(CoinsUiState())
-    val coinsState: State<CoinsUiState> = _coinsState
+    var coinsState = mutableStateOf(CoinsUiState())
 
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing = _isRefreshing.asStateFlow()
@@ -33,24 +31,27 @@ class CoinsViewModel @Inject constructor(
             coinsService.getCoins().collect { result ->
                 when (result.status) {
                     Status.LOADING -> {
-                        _coinsState.value = coinsState.value.copy(
-                            coinsList = result.data?.data.orEmpty(),
-                            isLoading = true
-                        )
+                        coinsState.value =
+                            CoinsUiState(
+                                coinsList = result.data?.data,
+                                status = LoaderStatus.LOADING
+                            )
+
                     }
 
                     Status.SUCCESS -> {
-                        _coinsState.value = coinsState.value.copy(
-                            coinsList = result.data?.data.orEmpty(),
-                            isLoading = false
-                        )
+                        coinsState.value =
+                            CoinsUiState(
+                                coinsList = result.data?.data,
+                                status = LoaderStatus.SUCCESS
+                            )
                     }
 
                     Status.ERROR -> {
-                        _coinsState.value = coinsState.value.copy(
-                            coinsList = result.data?.data.orEmpty(),
-                            isLoading = false
-                        )
+                        coinsState.value =
+                            CoinsUiState(
+                                coinsList = result.data?.data, status = LoaderStatus.ERROR
+                            )
                     }
                 }
             }

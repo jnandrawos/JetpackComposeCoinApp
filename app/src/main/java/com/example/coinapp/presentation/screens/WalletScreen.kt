@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -28,6 +27,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.coinapp.presentation.components.LazyLoader
+import com.example.coinapp.presentation.components.LoaderStatus
 import com.example.coinapp.presentation.viewmodels.WalletViewModel
 import com.example.coinapp.source.local.TransactionModel
 import java.text.SimpleDateFormat
@@ -58,50 +59,45 @@ fun WalletScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(150.dp)
-                    .background(Color.Blue, shape = RoundedCornerShape(10.dp))
-                    .padding(5.dp)
-            ) {
-                Column(
+            LazyLoader(state.status) {
+                Box(
                     modifier = Modifier
-                        .padding(10.dp)
-                        .fillMaxHeight(),
-                    verticalArrangement = Arrangement.SpaceBetween,
+                        .fillMaxWidth()
+                        .height(150.dp)
+                        .background(Color.Blue, shape = RoundedCornerShape(10.dp))
+                        .padding(5.dp)
                 ) {
-                    Text(
-                        text = "Balance",
-                        color = Color.White,
-                        fontSize = 24.sp,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.fillMaxWidth(),
+                    Column(
+                        modifier = Modifier
+                            .padding(10.dp)
+                            .fillMaxHeight(),
+                        verticalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text(
-                            text = "${state.valueUSD ?: "..."} $",
+                            text = "Balance",
                             color = Color.White,
-                            fontSize = 20.sp,
+                            fontSize = 24.sp,
                             textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth()
                         )
-                        Text(
-                            text = "${state.valueBTC ?: "..."} BTC",
-                            color = Color.White,
-                            fontSize = 20.sp,
-                            textAlign = TextAlign.Center,
-                        )
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier.fillMaxWidth(),
+                        ) {
+                            Text(
+                                text = "${state.valueUSD ?: "..."} $",
+                                color = Color.White,
+                                fontSize = 20.sp,
+                                textAlign = TextAlign.Center,
+                            )
+                            Text(
+                                text = "${state.valueBTC ?: "..."} BTC",
+                                color = Color.White,
+                                fontSize = 20.sp,
+                                textAlign = TextAlign.Center,
+                            )
+                        }
                     }
-                }
-                if (state.isLoading) {
-                    CircularProgressIndicator(
-                        color = Color.White,
-                        modifier = Modifier
-                            .align(Alignment.Center)
-                    )
                 }
             }
             Spacer(modifier = Modifier.height(50.dp))
@@ -112,13 +108,13 @@ fun WalletScreen(
                 Text(
                     modifier = Modifier
                         .background(
-                            Color.Green.copy(alpha = if (state.isLoading) 0.5f else 1f),
+                            Color.Green.copy(alpha = if (state.status == LoaderStatus.LOADING) 0.5f else 1f),
                             shape = RoundedCornerShape(30.dp)
                         )
                         .weight(1f)
                         .padding(vertical = 10.dp)
                         .clickable {
-                            if (state.isLoading.not()) {
+                            if (state.status != LoaderStatus.LOADING) {
                                 walletViewModel.depositWallet()
                                 walletViewModel.insertTransaction(
                                     TransactionModel(
@@ -138,13 +134,13 @@ fun WalletScreen(
                 Text(
                     modifier = Modifier
                         .background(
-                            Color.Red.copy(alpha = if (state.isLoading) 0.5f else 1f),
+                            Color.Red.copy(alpha = if (state.status == LoaderStatus.LOADING) 0.5f else 1f),
                             shape = RoundedCornerShape(30.dp)
                         )
                         .weight(1f)
                         .padding(10.dp)
                         .clickable {
-                            if (state.isLoading.not()) {
+                            if (state.status != LoaderStatus.LOADING) {
                                 walletViewModel.withdrawWallet()
                                 walletViewModel.insertTransaction(
                                     TransactionModel(

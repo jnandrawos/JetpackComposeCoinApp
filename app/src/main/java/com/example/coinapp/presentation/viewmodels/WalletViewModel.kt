@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.coinapp.base.models.LogsUiState
 import com.example.coinapp.base.models.Status
 import com.example.coinapp.base.models.WalletUiState
+import com.example.coinapp.presentation.components.LoaderStatus
 import com.example.coinapp.source.local.TransactionModel
 import com.example.coinapp.source.remote.service.WalletService
 import com.example.coinapp.source.repository.TransactionRepository
@@ -52,7 +53,7 @@ class WalletViewModel @Inject constructor(
                         _walletState.value = walletState.value.copy(
                             valueBTC = result.data?.data?.valueBTC,
                             valueUSD = result.data?.data?.valueUSD,
-                            isLoading = true
+                            status = LoaderStatus.LOADING
                         )
                     }
 
@@ -60,7 +61,7 @@ class WalletViewModel @Inject constructor(
                         _walletState.value = walletState.value.copy(
                             valueBTC = result.data?.data?.valueBTC,
                             valueUSD = result.data?.data?.valueUSD,
-                            isLoading = false
+                            status = LoaderStatus.SUCCESS
                         )
                     }
 
@@ -68,7 +69,7 @@ class WalletViewModel @Inject constructor(
                         _walletState.value = walletState.value.copy(
                             valueBTC = result.data?.data?.valueBTC,
                             valueUSD = result.data?.data?.valueUSD,
-                            isLoading = false
+                            status = LoaderStatus.ERROR
                         )
                     }
                 }
@@ -84,7 +85,7 @@ class WalletViewModel @Inject constructor(
                         _walletState.value = walletState.value.copy(
                             valueBTC = result.data?.data?.valueBTC,
                             valueUSD = result.data?.data?.valueUSD,
-                            isLoading = true
+                            status = LoaderStatus.LOADING
                         )
                     }
 
@@ -92,7 +93,7 @@ class WalletViewModel @Inject constructor(
                         _walletState.value = walletState.value.copy(
                             valueBTC = result.data?.data?.valueBTC,
                             valueUSD = result.data?.data?.valueUSD,
-                            isLoading = false
+                            status = LoaderStatus.SUCCESS
                         )
                     }
 
@@ -100,7 +101,7 @@ class WalletViewModel @Inject constructor(
                         _walletState.value = walletState.value.copy(
                             valueBTC = result.data?.data?.valueBTC,
                             valueUSD = result.data?.data?.valueUSD,
-                            isLoading = false
+                            status = LoaderStatus.ERROR
                         )
                     }
                 }
@@ -116,7 +117,7 @@ class WalletViewModel @Inject constructor(
                         _walletState.value = walletState.value.copy(
                             valueBTC = result.data?.data?.valueBTC,
                             valueUSD = result.data?.data?.valueUSD,
-                            isLoading = true
+                            status = LoaderStatus.LOADING
                         )
                     }
 
@@ -124,7 +125,7 @@ class WalletViewModel @Inject constructor(
                         _walletState.value = walletState.value.copy(
                             valueBTC = result.data?.data?.valueBTC,
                             valueUSD = result.data?.data?.valueUSD,
-                            isLoading = false
+                            status = LoaderStatus.SUCCESS
                         )
                     }
 
@@ -132,7 +133,7 @@ class WalletViewModel @Inject constructor(
                         _walletState.value = walletState.value.copy(
                             valueBTC = result.data?.data?.valueBTC,
                             valueUSD = result.data?.data?.valueUSD,
-                            isLoading = false
+                            status = LoaderStatus.ERROR
                         )
                     }
                 }
