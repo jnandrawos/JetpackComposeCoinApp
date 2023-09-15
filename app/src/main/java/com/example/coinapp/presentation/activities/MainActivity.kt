@@ -1,4 +1,4 @@
-package com.example.coinapp
+package com.example.coinapp.presentation.activities
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.coinapp.MyApp
 import com.example.coinapp.presentation.components.CustomBottomAppBar
 import com.example.coinapp.presentation.navigation.BottomBarScreen
 import com.example.coinapp.presentation.navigation.NavigationGraph
@@ -49,7 +50,6 @@ fun MainScreen() {
     Scaffold(
         bottomBar = { CustomBottomAppBar(navController = navController, screens) },
         topBar = {
-            if (screens.any { it.route == navController.currentBackStackEntryAsState().value?.destination?.route })
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()

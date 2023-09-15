@@ -22,9 +22,6 @@ class CoinsViewModel @Inject constructor(
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing = _isRefreshing.asStateFlow()
 
-    init {
-        getCoins()
-    }
 
     fun getCoins() {
         viewModelScope.launch {

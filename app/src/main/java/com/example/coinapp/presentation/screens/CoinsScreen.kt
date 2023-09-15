@@ -1,5 +1,6 @@
 package com.example.coinapp.presentation.screens
 
+import android.content.Intent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -13,15 +14,16 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavHostController
 import com.example.coinapp.MyApp
-import com.example.coinapp.base.extensions.encodeUrl
 import com.example.coinapp.base.extensions.obtainViewModel
 import com.example.coinapp.base.models.CoinData
+import com.example.coinapp.base.utils.Converters
+import com.example.coinapp.presentation.activities.CoinDetailsActivity
 import com.example.coinapp.presentation.components.CustomCoinTile
 import com.example.coinapp.presentation.components.LazyLoader
-import com.example.coinapp.presentation.navigation.BottomBarScreen
+import com.example.coinapp.presentation.components.LoaderStatus
 import com.example.coinapp.presentation.viewmodels.CoinsViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -29,7 +31,6 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 @Composable
 fun CoinsScreen(
     modifier: Modifier,
-    navController: NavHostController,
 ) {
     val coinsViewModel: CoinsViewModel by lazy {
         obtainViewModel(
@@ -59,14 +60,18 @@ fun CoinsScreen(
             LazyLoader(
                 status = state.status
             ) {
-                CoinsSelector(state.coinsList.orEmpty(), navController)
+                CoinsSelector(state.coinsList.orEmpty()) {
+                    if (state.status != LoaderStatus.LOADING) coinsViewModel.getCoins()
+                }
             }
         }
     }
 }
 
 @Composable
-fun CoinsSelector(data: List<CoinData>, navController: NavHostController) {
+fun CoinsSelector(data: List<CoinData>, fetchData: () -> Unit) {
+    val context = LocalContext.current
+    if (data.isEmpty()) fetchData.invoke()
     LazyColumn(
         Modifier.fillMaxSize(), contentPadding = PaddingValues(bottom = 16.dp)
     ) {
@@ -74,7 +79,12 @@ fun CoinsSelector(data: List<CoinData>, navController: NavHostController) {
             CustomCoinTile(
                 title = item.name.toString(), subtitle = item.symbol, imageUrl = item.icon.orEmpty()
             ) { image, name, symbol ->
-                navController.navigate("${BottomBarScreen.Details.route}/${image?.encodeUrl()}/$name/$symbol")
+                context.startActivity(Intent(context, CoinDetailsActivity::class.java).apply {
+                    putExtra(
+                        "coin_bundle",
+                        Converters.setCoin(CoinData(icon = image, name = name, symbol = symbol))
+                    )
+                })
             }
             if (index < data.size) Spacer(modifier = Modifier.height(20.dp))
         }

@@ -16,33 +16,32 @@ import com.example.coinapp.presentation.navigation.BottomBarScreen
 fun CustomBottomAppBar(navController: NavHostController, screens: List<BottomBarScreen>) {
     val navBackStackEntry = navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry.value?.destination
-    if (screens.any { it.route == currentRoute?.route })
-        NavigationBar(
-            containerColor = Color.White
-        ) {
-            screens.forEach { item ->
-                NavigationBarItem(
-                    selected = currentRoute?.hierarchy?.any { it.route == item.route } == true,
-                    onClick = {
-                        navController.navigate(item.route) {
-                            popUpTo(BottomBarScreen.Coins.route) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
+    NavigationBar(
+        containerColor = Color.White
+    ) {
+        screens.forEach { item ->
+            NavigationBarItem(
+                selected = currentRoute?.hierarchy?.any { it.route == item.route } == true,
+                onClick = {
+                    navController.navigate(item.route) {
+                        popUpTo(BottomBarScreen.Coins.route) {
+                            saveState = true
                         }
-                    },
-                    label = { Text(text = item.label) },
-                    icon = {
-                        Icon(
-                            imageVector = item.icon,
-                            contentDescription = "",
-                        )
-                    },
-                    colors = getNavigationBarItemColors()
-                )
-            }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
+                },
+                label = { Text(text = item.label) },
+                icon = {
+                    Icon(
+                        imageVector = item.icon,
+                        contentDescription = "",
+                    )
+                },
+                colors = getNavigationBarItemColors()
+            )
         }
+    }
 }
 
 @Composable

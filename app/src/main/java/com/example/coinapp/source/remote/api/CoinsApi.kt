@@ -11,12 +11,4 @@ interface CoinsApi {
     @GET("getCoins.php")
     suspend fun getCoins(): Response<CommonResponse<List<CoinData>>>
 
-    @GET("getWallet.php")
-    suspend fun getWallet(): Response<CommonResponse<WalletData>>
-
-    @GET("depositWallet.php")
-    suspend fun depositWallet(): Response<CommonResponse<WalletData>>
-
-    @GET("withdrawWallet.php")
-    suspend fun withdrawWallet(): Response<CommonResponse<WalletData>>
 }
